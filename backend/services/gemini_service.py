@@ -16,9 +16,8 @@ class GeminiService:
         
         for _ in range(len(Config.GEMINI_API_KEYS)):
             try:
-                # Using the generative model to generate response
-                # Note: multimodal capabilities are handled by passing audio/images in the content list
-                response = self.model.generate_content(full_prompt)
+                # Utilizing non-blocking async method from the SDK
+                response = await self.model.generate_content_async(full_prompt)
                 return response.text
             except Exception as e:
                 logging.error(f"Error with current API key: {e}")
@@ -32,20 +31,13 @@ class GeminiService:
         raise Exception("All API keys exhausted or failed.")
 
     async def text_to_speech(self, text):
-        # Gemini 1.5 Pro/Flash supports multimodal output, 
-        # but for direct TTS, we often use specific models or 
-        # generate audio content if supported by the library version.
-        # Here we simulate the multimodal call.
-        prompt = f"Generate an audio response for: {text}"
-        # This is a placeholder for actual multimodal audio generation 
-        # which depends on specific API features like 'speech' generation.
+        # Placeholder for Gemini multimodal TTS representation
         return f"Audio data for: {text}" 
 
     async def speech_to_text(self, audio_bytes):
-        # Gemini can process audio files.
-        # We upload the bytes as a part of the content.
+        # Utilizing non-blocking async method from the SDK for multimodal audio ingestion
         try:
-            response = self.model.generate_content([
+            response = await self.model.generate_content_async([
                 "Transcribe this audio exactly.",
                 {"mime_type": "audio/wav", "data": audio_bytes}
             ])
